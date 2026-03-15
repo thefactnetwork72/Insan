@@ -1,0 +1,66 @@
+{
+  "id": "/",
+  "name": "Insan",
+  "short_name": "Insan",
+  "description": "Real-time messaging \u2014 stay connected",
+  "lang": "en",
+  "dir": "ltr",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui",
+    "browser"
+  ],
+  "orientation": "portrait-primary",
+  "background_color": "#edfff4",
+  "theme_color": "#2ECC71",
+  "categories": [
+    "social",
+    "communication"
+  ],
+  "icons": [
+    {
+      "src": "icons/insan.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/insan.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icons/insan.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/insan.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "New Chat",
+      "short_name": "Chat",
+      "description": "Start a new conversation",
+      "url": "./index.html",
+      "icons": [
+        {
+          "src": "icons/insan.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ],
+  "background_sync": true,
+  "prefer_related_applications": false,
+  "handle_links": "preferred"
+}

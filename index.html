@@ -1,0 +1,1415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#2ECC71">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Insan">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/insan.png">
+  <link rel="icon" type="image/png" href="icons/insan.png">
+  <title>Insan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="app">
+
+  <!-- SPLASH -->
+  <div class="screen active" id="screen-splash">
+    <div class="splash-ring">
+      <img class="splash-icon" src="icons/insan.png" alt="Insan" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+      <svg style="display:none" xmlns="http://www.w3.org/2000/svg" width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    </div>
+    <h1 class="splash-name">Insan</h1>
+    <p class="splash-hint">Connecting <span class="dots"><span></span><span></span><span></span></span></p>
+  </div>
+
+  <!-- APP LOCK SCREEN -->
+  <div class="screen" id="screen-applock">
+    <div class="applock-wrap">
+      <div class="applock-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
+      <h2 class="applock-title">Insan is Locked</h2>
+      <p class="applock-sub" id="applock-sub">Enter your 4-digit PIN</p>
+
+      <div class="pin-dots" id="pin-dots">
+        <span class="pin-dot" id="pd0"></span>
+        <span class="pin-dot" id="pd1"></span>
+        <span class="pin-dot" id="pd2"></span>
+        <span class="pin-dot" id="pd3"></span>
+      </div>
+
+      <div class="pin-error" id="pin-error"></div>
+
+      <div class="pin-pad">
+        <button class="pin-key" onclick="pinKey('1')">1</button>
+        <button class="pin-key" onclick="pinKey('2')">2</button>
+        <button class="pin-key" onclick="pinKey('3')">3</button>
+        <button class="pin-key" onclick="pinKey('4')">4</button>
+        <button class="pin-key" onclick="pinKey('5')">5</button>
+        <button class="pin-key" onclick="pinKey('6')">6</button>
+        <button class="pin-key" onclick="pinKey('7')">7</button>
+        <button class="pin-key" onclick="pinKey('8')">8</button>
+        <button class="pin-key" onclick="pinKey('9')">9</button>
+        <button class="pin-key pin-key-empty"></button>
+        <button class="pin-key" onclick="pinKey('0')">0</button>
+        <button class="pin-key pin-key-del" onclick="pinBackspace()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/><line x1="18" y1="9" x2="12" y2="15"/><line x1="12" y1="9" x2="18" y2="15"/></svg>
+        </button>
+      </div>
+
+      <button class="applock-forgot" onclick="forgotPIN()">Forgot PIN?</button>
+      <button class="applock-logout" onclick="logout()">Use different account</button>
+    </div>
+  </div>
+
+  <!-- AUTH -->
+  <div class="screen" id="screen-auth">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <div class="auth-logo-ring">
+          <img src="icons/insan.png" alt="Insan"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+               style="width:52px;height:52px;border-radius:14px;object-fit:cover">
+          <svg style="display:none" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <h2 id="auth-title"><span data-i18n="login">Login</span></h2>
+        <p class="auth-sub" id="auth-sub-text"><span data-i18n="welcomeBack">Welcome back to Insan</span></p>
+      </div>
+      <div class="form-stack">
+
+        <!-- ── SIGNUP ONLY ── -->
+        <div id="auth-name-wrap" style="display:none">
+          <div class="field">
+            <label class="field-label"><span data-i18n="fullName">Full Name</span></label>
+            <input type="text" id="auth-name" class="inp" placeholder="John Doe" autocomplete="name">
+          </div>
+        </div>
+        <div id="auth-username-wrap" style="display:none">
+          <div class="field">
+            <label class="field-label"><span data-i18n="username">Username</span></label>
+            <div class="inp-prefix-wrap">
+              <span class="inp-prefix">@</span>
+              <input type="text" id="auth-username" class="inp inp-prefixed" placeholder="your_username"
+                autocomplete="username" oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9_.]/g,'')">
+            </div>
+            <span class="field-hint">Letters, numbers, _ and . only</span>
+          </div>
+        </div>
+
+        <!-- ── ALWAYS ── -->
+        <div class="field">
+          <label class="field-label"><span data-i18n="email">Email</span></label>
+          <input type="email" id="auth-email" class="inp" placeholder="you@example.com" autocomplete="email">
+        </div>
+        <div class="field">
+          <label class="field-label"><span data-i18n="password">Password</span></label>
+          <div style="position:relative">
+            <input type="password" id="auth-password" class="inp" placeholder="Min. 6 characters"
+              autocomplete="current-password" style="padding-right:44px"
+              onkeydown="if(event.key==='Enter')handleAuth($('auth-btn').dataset.mode==='login')">
+            <button type="button" class="pw-toggle-btn" onclick="togglePwVis('auth-password',this)" tabindex="-1">
+              <svg id="auth-pw-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- ── SIGNUP ONLY ── -->
+        <div id="auth-confirm-wrap" style="display:none">
+          <div class="field">
+            <label class="field-label"><span data-i18n="confirmPassword">Confirm Password</span></label>
+            <input type="password" id="auth-confirm" class="inp" placeholder="Re-enter password">
+          </div>
+        </div>
+
+        <!-- ── FORGOT PASSWORD (login only) ── -->
+        <div id="auth-forgot-wrap" style="text-align:right;margin-top:-4px;margin-bottom:4px">
+          <button class="btn-link" style="font-size:13px" onclick="handleForgotPassword()" data-i18n-ref="forgotPassword"><span data-i18n="forgotPassword">Forgot password?</span></button>
+        </div>
+
+        <button class="btn-primary" id="auth-btn" data-mode="login"
+          onclick="handleAuth(this.dataset.mode==='login')"><span data-i18n="login">Login</span></button>
+
+        <div class="auth-toggle-row">
+          <span id="auth-toggle-text"><span data-i18n="noAccount">Don\'t have an account?</span></span>
+          <button class="btn-link" id="auth-toggle-btn" onclick="toggleAuthMode()"><span data-i18n="signup">Sign Up</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="screen" id="screen-dashboard">
+    <header class="topbar">
+      <button class="icon-btn" onclick="openSidebar()" aria-label="Menu">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <span class="topbar-title" id="topbar-title">Insan</span>
+      <button class="icon-btn flow-topbar-btn" onclick="openFlow()" aria-label="Flow" title="Flow — public posts">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+      </button>
+      <button class="icon-btn" id="topbar-action-btn" onclick="handleTopbarAction()" aria-label="Action">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
+    </header>
+    <!-- Mini call strip — sits between topbar and chat list, pushes list down -->
+    <div class="vc-mini-strip" id="vc-mini-strip" style="display:none" onclick="vcMaximize()">
+      <div class="vc-mini-avatar" id="vc-mini-avatar">?</div>
+      <div class="vc-mini-info">
+        <span class="vc-mini-name" id="vc-mini-name">User</span>
+        <span class="vc-mini-time" id="vc-mini-time"><span class="vc-mini-pulse"></span>Calling…</span>
+      </div>
+      <span class="vc-mini-expand-hint">tap to expand</span>
+      <div class="vc-mini-btns">
+        <button class="vc-mini-mute-btn" id="vc-mini-mute-btn" onclick="event.stopPropagation();vcToggleMute()" title="Mute/Unmute">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+            <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+            <line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/>
+          </svg>
+        </button>
+        <button class="vc-mini-end-btn" onclick="event.stopPropagation();endVoiceCall(true)" title="End call">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+            <path d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7 2 2 0 0 1 1.72 2v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07"/>
+            <path d="M14.5 9.5 9 4M3 3l18 18"/><path d="M6.33 6.33A13.47 13.47 0 0 0 3 13a2 2 0 0 0 2 2h.5"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div class="chat-list-wrap"><div id="chat-list"></div></div>
+    <nav class="bottom-nav">
+      <button class="nav-btn active" data-tab="chats" onclick="setActiveTab('chats')">
+        <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span><span data-i18n="chats">Chats</span>
+      </button>
+      <button class="nav-btn" data-tab="channels" onclick="setActiveTab('channels')">
+        <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg></span><span data-i18n="channels">Channels</span>
+      </button>
+      <button class="nav-btn" data-tab="groups" onclick="setActiveTab('groups')">
+        <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span data-i18n="groups">Groups</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- CHAT SCREEN -->
+  <div class="screen" id="screen-chat">
+    <!-- Desktop no-chat placeholder (hidden on mobile) -->
+    <div id="desktop-no-chat" class="desktop-no-chat" style="display:none">
+      <div class="dnc-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      </div>
+      <h3 class="dnc-title">Open a conversation</h3>
+      <p class="dnc-desc">Select a chat, channel, or group from the left panel to start messaging</p>
+    </div>
+    <header class="chat-topbar">
+      <div id="chat-header" style="display:flex;align-items:center;gap:10px;flex:1;min-width:0;"></div>
+      <div style="display:flex;align-items:center;gap:2px;flex-shrink:0;">
+        <!-- Voice Call / Voice Chat button — icon swaps per conv type -->
+        <button class="icon-btn" id="voice-call-btn" onclick="startVoiceCall()" aria-label="Voice call" title="Voice call">
+          <!-- Phone icon: shown for DMs -->
+          <svg id="vc-icon-phone" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+          </svg>
+          <!-- Mic icon: shown for Groups and Channels -->
+          <svg id="vc-icon-mic" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+            <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+            <line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/>
+          </svg>
+        </button>
+        <!-- Options button -->
+        <button class="icon-btn" id="conv-options-btn" onclick="openConvOptions()" aria-label="Options">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="5" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="12" cy="19" r="1.2"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- ── Group / Channel Voice Chat Bar ── -->
+    <div class="gvc-bar" id="gvc-bar" style="display:none">
+      <div class="gvc-bar-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+      </div>
+      <div class="gvc-bar-info">
+        <span class="gvc-bar-title">Voice Chat</span>
+        <span class="gvc-bar-members" id="gvc-bar-members">Starting…</span>
+      </div>
+      <div class="gvc-bar-avatars" id="gvc-bar-avatars"></div>
+      <button class="gvc-join-btn" id="gvc-join-btn" onclick="gvcJoin()">Join</button>
+      <button class="gvc-leave-btn" id="gvc-leave-btn" onclick="gvcLeave()" style="display:none">Leave</button>
+      <button class="gvc-end-btn" id="gvc-end-btn" onclick="gvcEnd()" style="display:none" title="End voice chat for everyone">End</button>
+    </div>
+    <div class="messages-area" id="msg-area"></div>
+    <div class="input-area" id="msg-input-area">
+      <div class="typing-bar" id="typing-bar"></div>
+
+      <!-- Attachment preview chips -->
+      <div class="attach-preview" id="attach-preview" style="display:none"></div>
+
+      <!-- Drag-over hint -->
+      <div class="drag-hint" id="drag-hint" style="display:none">📎 Files yahan drop karo</div>
+
+      <!-- Hidden file input (outside rows — persists while recording row is showing) -->
+      <input type="file" id="file-attach-input" multiple style="display:none" onchange="handleFileInputChange(this.files)">
+
+      <!-- Reply bar — shown when replying to a message -->
+      <div id="reply-bar" style="display:none" class="reply-bar">
+        <div class="reply-bar-inner">
+          <div class="reply-bar-accent"></div>
+          <div class="reply-bar-content">
+            <span class="reply-bar-name"></span>
+            <span class="reply-bar-preview"></span>
+          </div>
+        </div>
+        <button class="reply-bar-close" onclick="_clearReply()" title="Cancel reply">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <!-- ── Normal message input row ── -->
+      <div class="input-row" id="input-row-main"
+        ondrop="handleFileDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
+
+        <!-- Input bubble: [📎] [textarea] [🎤] -->
+        <div class="input-bubble" id="input-bubble">
+          <button class="bubble-icon-btn" id="attach-btn"
+            onclick="document.getElementById('file-attach-input').click()" title="Attach file">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round" width="19" height="19">
+              <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
+            </svg>
+          </button>
+          <textarea class="msg-inp" id="msg-input" data-i18n-ph="typeMessage" placeholder="Type a message…" rows="1"
+            onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage();}"
+            oninput="onTyping();autoResize(this);_updateSendMicVis()"></textarea>
+        </div>
+
+        <!-- Send btn — hidden until text typed or file attached -->
+        <button class="send-btn" id="send-btn" onclick="sendMessage()" aria-label="Send" style="display:none">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
+        </button>
+
+        <!-- Mic button — OUTSIDE bubble, Telegram-style hold-to-record -->
+        <button class="tg-mic-btn" id="mic-btn" aria-label="Hold to record voice message" title="Hold to record">
+          <svg class="tg-mic-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+            <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+            <line x1="12" y1="19" x2="12" y2="23"/>
+            <line x1="8" y1="23" x2="16" y2="23"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- ── Telegram-style recording overlay (slides up over input row) ── -->
+      <div class="tg-rec-overlay" id="tg-rec-overlay">
+        <!-- Slide-to-cancel arrow hint (left side) -->
+        <div class="tg-slide-hint" id="tg-slide-hint">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
+            <polyline points="15 18 9 12 15 6"/>
+          </svg>
+          <span>Slide to cancel</span>
+        </div>
+        <!-- Timer + waveform (center) -->
+        <div class="tg-rec-center">
+          <div class="tg-rec-dot"></div>
+          <span class="tg-rec-timer" id="tg-rec-timer">0:00</span>
+          <canvas class="tg-rec-waveform" id="tg-rec-waveform" height="28"></canvas>
+        </div>
+        <!-- Lock hint (right side, above mic) -->
+        <div class="tg-lock-hint" id="tg-lock-hint">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- ── Locked recording row (shown after sliding up to lock) ── -->
+      <div class="tg-locked-row" id="tg-locked-row" style="display:none">
+        <!-- Delete/cancel trash button -->
+        <button class="tg-locked-cancel" onclick="cancelRecording()" title="Delete recording" aria-label="Delete recording">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
+            <polyline points="3 6 5 6 21 6"/>
+            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+            <path d="M10 11v6"/><path d="M14 11v6"/>
+          </svg>
+        </button>
+        <!-- Live timer + waveform -->
+        <div class="tg-locked-center">
+          <div class="tg-rec-dot"></div>
+          <span class="tg-rec-timer" id="tg-locked-timer">0:00</span>
+          <canvas class="tg-rec-waveform" id="tg-locked-waveform" height="28"></canvas>
+        </div>
+        <!-- Stop/send button -->
+        <button class="send-btn" onclick="stopRecording()" aria-label="Send voice message" title="Send">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div class="readonly-banner" id="readonly-banner" style="display:none">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      Only admins can post in this channel
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar-overlay" id="sb-overlay" onclick="closeSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">
+      <div class="sb-head-top">
+        <button class="sb-theme-btn" onclick="setTheme(!App.isDark)" aria-label="Toggle theme" id="sb-theme-btn">
+          <svg id="sb-theme-icon-moon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <svg id="sb-theme-icon-sun" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        </button>
+      </div>
+      <img id="sb-avatar" src="" alt="" onerror="this.src=avatarSrc(null)">
+      <span id="sb-name"></span>
+      <span id="sb-email"></span>
+    </div>
+    <div class="sidebar-body">
+      <button class="sb-item" onclick="openEditProfile()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Edit Profile
+      </button>
+      <button class="sb-item" onclick="closeSidebar();openCreateChannel()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+        Create Channel
+      </button>
+      <button class="sb-item" onclick="closeSidebar();openCreateGroup()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Create Group
+      </button>
+      <button class="sb-item" onclick="closeSidebar();openCallsHistory()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        Calls
+      </button>
+      <div class="sb-div"></div>
+      <button class="sb-item" onclick="closeSidebar();openSettings()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Settings
+      </button>
+      <div class="sb-div"></div>
+      <button class="sb-item" id="sb-update-btn" onclick="closeSidebar();checkForUpdate()" style="display:none">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+        Update Available
+        <span class="sb-update-dot"></span>
+      </button>
+      <button class="sb-item" onclick="closeSidebar();openInvite()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+        Invite
+      </button>
+      <button class="sb-item" onclick="closeSidebar();openAbout()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="8"/><line x1="12" y1="12" x2="12" y2="16"/></svg>
+        About
+      </button>
+    </div>
+  </aside>
+
+  <!-- MODAL: FIND PEOPLE -->
+  <div class="modal-backdrop" id="modal-search" onclick="if(event.target===this)closeModal('modal-search')">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <h3 class="modal-title">Find People</h3>
+      <div class="search-inp-wrap">
+        <svg class="si" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="search-inp" class="inp" data-i18n-ph="searchUsers" placeholder="Search by @username or name…"
+          oninput="searchUsers(this.value)" autocomplete="off" autocorrect="off" spellcheck="false">
+      </div>
+      <div class="modal-body" style="min-height:180px"><div id="search-results"><p class="no-results" style="padding:18px 0">@username ya naam likhke search karo</p></div></div>
+    </div>
+  </div>
+
+  <!-- MODAL: SEARCH CHANNELS & GROUPS -->
+  <div class="modal-backdrop" id="modal-search-cg" onclick="if(event.target===this)closeModal('modal-search-cg')">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <h3 class="modal-title" id="cg-search-title">Find Channels</h3>
+      <div class="search-inp-wrap">
+        <svg class="si" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="cg-search-inp" class="inp" data-i18n-ph="searchByName" placeholder="Search by name…"
+          oninput="searchChannelsGroups(this.value)" autocomplete="off">
+      </div>
+      <!-- Tab pills -->
+      <div class="cg-search-tabs">
+        <button class="cg-stab active" id="cg-stab-channel" onclick="setCGSearchTab('channel')">Channels</button>
+        <button class="cg-stab" id="cg-stab-group" onclick="setCGSearchTab('group')">Groups</button>
+      </div>
+      <div class="modal-body" style="min-height:180px"><div id="cg-search-results"><p class="no-results" style="padding:18px 0">Search karo naam se</p></div></div>
+    </div>
+  </div>
+
+  <!-- MODAL: EDIT PROFILE -->
+  <div class="modal-backdrop" id="modal-editprofile" onclick="if(event.target===this)closeModal('modal-editprofile')">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <h3 class="modal-title"><span data-i18n="editProfile">Edit Profile</span></h3>
+      <div class="modal-form">
+        <div class="avatar-upload-field">
+          <div class="avatar-upload-wrap" onclick="document.getElementById('ep-avatar-file').click()">
+            <img id="ep-avatar-preview" src="" class="avatar-upload-img" alt="">
+            <div class="avatar-upload-badge">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            </div>
+            <div class="avatar-upload-spinner" id="ep-avatar-spinner" style="display:none">
+              <span class="spinner" style="border-color:rgba(255,255,255,.35);border-top-color:white;width:26px;height:26px"></span>
+            </div>
+          </div>
+          <input type="file" id="ep-avatar-file" accept="image/*" style="display:none" onchange="handleAvatarUpload(this,'profile')">
+          <span class="avatar-upload-hint">Tap photo to change</span>
+        </div>
+        <div class="field">
+          <label class="field-label">Full Name <span style="color:var(--text-sec);font-weight:400">(Display Name)</span></label>
+          <input type="text" id="ep-display-name" class="inp" placeholder="John Doe">
+        </div>
+        <div class="field">
+          <label class="field-label"><span data-i18n="username">Username</span></label>
+          <div class="inp-prefix-wrap">
+            <span class="inp-prefix">@</span>
+            <input type="text" id="ep-username" class="inp inp-prefixed" placeholder="your_username"
+              oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9_.]/g,'')">
+          </div>
+          <span class="field-hint">Unique — others search you by this</span>
+        </div>
+        <div class="field"><label class="field-label"><span data-i18n="bio">Bio</span></label><input type="text" id="ep-bio" class="inp" placeholder="Tell us about yourself"></div>
+        <div class="modal-actions">
+          <button class="btn-secondary" onclick="closeModal('modal-editprofile')"><span data-i18n="cancel">Cancel</span></button>
+          <button class="btn-primary" style="flex:1" id="ep-save-btn" onclick="saveProfile()"><span data-i18n="save">Save</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: CREATE CHANNEL -->
+  <div class="modal-backdrop" id="modal-create-channel" onclick="if(event.target===this)closeModal('modal-create-channel')">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-header-row">
+        <div class="modal-header-icon channel-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+        </div>
+        <h3 class="modal-title" style="margin-bottom:0"><span data-i18n="createChannel">Create Channel</span></h3>
+      </div>
+      <p class="modal-desc">You are the admin — only you can post, members read.</p>
+      <div class="modal-form">
+        <div class="avatar-upload-field">
+          <div class="avatar-upload-wrap" onclick="document.getElementById('cc-avatar-file').click()">
+            <img id="cc-avatar-preview" src="" class="avatar-upload-img" alt="">
+            <div class="avatar-upload-badge">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            </div>
+            <div class="avatar-upload-spinner" id="cc-avatar-spinner" style="display:none">
+              <span class="spinner" style="border-color:rgba(255,255,255,.35);border-top-color:white;width:26px;height:26px"></span>
+            </div>
+          </div>
+          <input type="file" id="cc-avatar-file" accept="image/*" style="display:none" onchange="handleAvatarUpload(this,'cc')">
+          <span class="avatar-upload-hint">Add a channel photo (optional)</span>
+        </div>
+        <div class="field"><label class="field-label">Channel Name *</label><input type="text" id="cc-name" class="inp" placeholder="e.g. Announcements"></div>
+        <div class="field"><label class="field-label">Description</label><input type="text" id="cc-desc" class="inp" placeholder="What's this channel about?"></div>
+        <div class="field">
+          <label class="field-label">Add Members</label>
+          <input type="text" id="cc-member-search" class="inp" data-i18n-ph="searchByName" placeholder="Search by name…" oninput="searchMembersToAdd('cc',this.value)">
+          <div id="cc-member-results" class="member-results"></div>
+          <div id="cc-members-list" class="members-chips"></div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn-secondary" onclick="closeModal('modal-create-channel')"><span data-i18n="cancel">Cancel</span></button>
+          <button class="btn-primary" style="flex:1" id="cc-submit-btn" onclick="submitCreateChannel()"><span data-i18n="createChannel">Create Channel</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: CREATE GROUP -->
+  <div class="modal-backdrop" id="modal-create-group" onclick="if(event.target===this)closeModal('modal-create-group')">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-header-row">
+        <div class="modal-header-icon group-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <h3 class="modal-title" style="margin-bottom:0"><span data-i18n="createGroup">Create Group</span></h3>
+      </div>
+      <p class="modal-desc">All members can send and read messages.</p>
+      <div class="modal-form">
+        <div class="avatar-upload-field">
+          <div class="avatar-upload-wrap" onclick="document.getElementById('cg-avatar-file').click()">
+            <img id="cg-avatar-preview" src="" class="avatar-upload-img" alt="">
+            <div class="avatar-upload-badge">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            </div>
+            <div class="avatar-upload-spinner" id="cg-avatar-spinner" style="display:none">
+              <span class="spinner" style="border-color:rgba(255,255,255,.35);border-top-color:white;width:26px;height:26px"></span>
+            </div>
+          </div>
+          <input type="file" id="cg-avatar-file" accept="image/*" style="display:none" onchange="handleAvatarUpload(this,'cg')">
+          <span class="avatar-upload-hint">Add a group photo (optional)</span>
+        </div>
+        <div class="field"><label class="field-label">Group Name *</label><input type="text" id="cg-name" class="inp" placeholder="e.g. Team Chat"></div>
+        <div class="field"><label class="field-label">Description</label><input type="text" id="cg-desc" class="inp" placeholder="What's this group about?"></div>
+        <div class="field">
+          <label class="field-label">Add Members</label>
+          <input type="text" id="cg-member-search" class="inp" data-i18n-ph="searchByName" placeholder="Search by name…" oninput="searchMembersToAdd('cg',this.value)">
+          <div id="cg-member-results" class="member-results"></div>
+          <div id="cg-members-list" class="members-chips"></div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn-secondary" onclick="closeModal('modal-create-group')"><span data-i18n="cancel">Cancel</span></button>
+          <button class="btn-primary" style="flex:1" id="cg-submit-btn" onclick="submitCreateGroup()"><span data-i18n="createGroup">Create Group</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: CONVERSATION OPTIONS -->
+  <div class="modal-backdrop" id="modal-conv-options" onclick="if(event.target===this)closeModal('modal-conv-options')">
+    <div class="modal-sheet options-sheet">
+      <div class="modal-handle"></div>
+      <div id="conv-options-header" class="options-header"></div>
+      <div id="conv-options-list" class="options-list"></div>
+    </div>
+  </div>
+
+  <!-- MODAL: VIEW MEMBERS -->
+  <div class="modal-backdrop" id="modal-members" onclick="if(event.target===this)closeModal('modal-members')">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <h3 class="modal-title" id="modal-members-title">Members</h3>
+      <div class="modal-body"><div id="members-list-body"></div></div>
+    </div>
+  </div>
+
+  <!-- MODAL: ADD MEMBERS TO EXISTING CONV -->
+  <div class="modal-backdrop" id="modal-add-members" onclick="if(event.target===this)closeModal('modal-add-members')">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <h3 class="modal-title" id="modal-add-members-title">Add Members</h3>
+      <div class="modal-form">
+        <div class="field">
+          <input type="text" id="am-search" class="inp" data-i18n-ph="searchByName" placeholder="Search by name…" oninput="searchMembersToAdd('am',this.value)">
+          <div id="am-member-results" class="member-results"></div>
+          <div id="am-members-list" class="members-chips"></div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn-secondary" onclick="closeModal('modal-add-members')"><span data-i18n="cancel">Cancel</span></button>
+          <button class="btn-primary" style="flex:1" id="am-submit-btn" onclick="submitAddMembers()">Add</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: EDIT CHANNEL / GROUP -->
+  <div class="modal-backdrop" id="modal-edit-conv" onclick="if(event.target===this)closeModal('modal-edit-conv')">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <h3 class="modal-title" id="modal-edit-conv-title">Edit</h3>
+      <div class="modal-form">
+        <!-- Avatar upload -->
+        <div class="avatar-upload-field">
+          <div class="avatar-upload-wrap" onclick="document.getElementById('edit-conv-avatar-file').click()">
+            <img id="edit-conv-avatar-preview" src="" class="avatar-upload-img" alt="">
+            <div class="avatar-upload-badge">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            </div>
+            <div class="avatar-upload-spinner" id="edit-conv-avatar-spinner" style="display:none">
+              <span class="spinner" style="border-color:rgba(255,255,255,.35);border-top-color:white;width:26px;height:26px"></span>
+            </div>
+          </div>
+          <input type="file" id="edit-conv-avatar-file" accept="image/*" style="display:none" onchange="handleAvatarUpload(this,'conv')">
+          <span class="avatar-upload-hint">Tap to change photo</span>
+        </div>
+        <div class="field"><label class="field-label">Name *</label><input type="text" id="edit-conv-name" class="inp" placeholder="Name"></div>
+        <div class="field"><label class="field-label">Description</label><input type="text" id="edit-conv-desc" class="inp" placeholder="Description"></div>
+        <div class="modal-actions">
+          <button class="btn-secondary" onclick="closeModal('modal-edit-conv')"><span data-i18n="cancel">Cancel</span></button>
+          <button class="btn-primary" style="flex:1" id="edit-conv-btn" onclick="submitEditConv()"><span data-i18n="save">Save</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: CONFIRM DANGER ACTION -->
+  <div class="modal-backdrop" id="modal-confirm" onclick="if(event.target===this)closeModal('modal-confirm')">
+    <div class="modal-sheet confirm-sheet">
+      <div class="modal-handle"></div>
+      <div class="confirm-icon" id="confirm-icon"></div>
+      <h3 class="confirm-title" id="confirm-title">Are you sure?</h3>
+      <p class="confirm-desc" id="confirm-desc"></p>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeModal('modal-confirm')"><span data-i18n="cancel">Cancel</span></button>
+        <button class="btn-danger" id="confirm-action-btn">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- SETTINGS SCREEN -->
+  <div class="screen" id="screen-settings">
+    <header class="topbar">
+      <button class="icon-btn" onclick="closeSettings()" aria-label="Back">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <span class="topbar-title"><span data-i18n="settings">Settings</span></span>
+      <span style="width:36px"></span>
+    </header>
+    <div class="settings-body">
+
+      <!-- PUSH NOTIFICATIONS -->
+      <div class="settings-section-label"><span data-i18n="notifications">Push Notifications</span></div>
+      <div class="settings-card">
+
+        <!-- Status row — live permission badge + enable button -->
+        <div class="settings-row" style="cursor:pointer" onclick="requestPushPermission(false)">
+          <div class="settings-row-icon notif">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          </div>
+          <div class="settings-row-text">
+            <span class="settings-row-label"><span data-i18n="enablePush">Enable Push Notifications</span></span>
+            <span class="settings-row-sub"><span data-i18n="tapToGrant">Tap to grant OS permission</span></span>
+          </div>
+          <span id="push-status-badge" class="push-status-badge push-badge-off">Not enabled</span>
+        </div>
+
+        <div class="settings-divider"></div>
+
+        <!-- Message preview toggle -->
+        <div class="settings-row">
+          <div class="settings-row-icon notif">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </div>
+          <div class="settings-row-text"><span class="settings-row-label"><span data-i18n="msgPreview">Message Preview</span></span><span class="settings-row-sub"><span data-i18n="msgPreviewSub">Show message content in notification</span></span></div>
+          <label class="toggle-switch"><input type="checkbox" id="stg-push-preview" onchange="saveSetting('push_preview',this.checked)"><span class="toggle-track"></span></label>
+        </div>
+
+        <div class="settings-divider"></div>
+
+        <!-- Vibrate toggle -->
+        <div class="settings-row">
+          <div class="settings-row-icon notif">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+          </div>
+          <div class="settings-row-text"><span class="settings-row-label"><span data-i18n="vibration">Vibration</span></span><span class="settings-row-sub"><span data-i18n="vibrationSub">Vibrate on incoming messages &amp; calls</span></span></div>
+          <label class="toggle-switch"><input type="checkbox" id="stg-push-vibrate" onchange="saveSetting('push_vibrate',this.checked)"><span class="toggle-track"></span></label>
+        </div>
+
+        <div class="settings-divider"></div>
+
+        <!-- Test notification button -->
+        <div class="settings-row" style="cursor:pointer" onclick="testPushNotification()">
+          <div class="settings-row-icon notif">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+          </div>
+          <div class="settings-row-text"><span class="settings-row-label"><span data-i18n="testNotif">Test Notification</span></span><span class="settings-row-sub"><span data-i18n="testNotifSub">Send a test push to verify it's working</span></span></div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+
+      </div>
+
+      <!-- CALLS -->
+      <div class="settings-section-label"><span data-i18n="calls">Calls</span></div>
+      <div class="settings-card">
+        <div class="settings-row">
+          <div class="settings-row-icon notif"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+          <div class="settings-row-text"><span class="settings-row-label"><span data-i18n="callRingtone">Call Ringtone</span></span><span class="settings-row-sub" id="stg-ringtone-label">Default</span></div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+        <div class="settings-divider"></div>
+        <div class="settings-row tone-row" id="ringtone-picker-row">
+          <div class="settings-row-icon notif"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
+          <div class="settings-row-text" style="flex:1">
+            <span class="settings-row-label"><span data-i18n="callRingtone">Ringtone</span></span>
+            <div class="tone-chips" id="ringtone-chips">
+              <button class="tone-chip active" data-ringtone="0" onclick="selectRingtone(0)">Classic</button>
+              <button class="tone-chip" data-ringtone="1" onclick="selectRingtone(1)">Modern</button>
+              <button class="tone-chip" data-ringtone="2" onclick="selectRingtone(2)">Pulse</button>
+              <button class="tone-chip ringtone-custom-chip" data-ringtone="custom" onclick="pickCustomRingtone()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Custom
+              </button>
+            </div>
+            <input type="file" id="custom-ringtone-file" accept="audio/*" style="display:none" onchange="handleCustomRingtone(this)">
+            <span class="settings-row-sub" id="custom-ringtone-name" style="display:none;margin-top:4px;color:var(--accent)"></span>
+          </div>
+        </div>
+        <div class="settings-divider"></div>
+        <div class="settings-row">
+          <div class="settings-row-icon notif"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></div>
+          <div class="settings-row-text"><span class="settings-row-label"><span data-i18n="callVibrate">Call Vibration</span></span><span class="settings-row-sub">Vibrate when receiving a call</span></div>
+          <label class="toggle-switch"><input type="checkbox" id="stg-call-vibrate" onchange="saveSetting('call_vibrate',this.checked)"><span class="toggle-track"></span></label>
+        </div>
+      </div>
+
+      <!-- APPEARANCE -->
+      <div class="settings-section-label">Appearance</div>
+      <div class="settings-card">
+        <div class="settings-row" onclick="setTheme(false)" style="cursor:pointer">
+          <div class="settings-row-icon appear"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></div>
+          <div class="settings-row-text"><span class="settings-row-label"><span data-i18n="lightMode">Light Mode</span></span></div>
+          <span class="theme-radio" id="theme-radio-light"></span>
+        </div>
+        <div class="settings-divider"></div>
+        <div class="settings-row" onclick="setTheme(true)" style="cursor:pointer">
+          <div class="settings-row-icon appear"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div>
+          <div class="settings-row-text"><span class="settings-row-label"><span data-i18n="darkMode">Dark Mode</span></span></div>
+          <span class="theme-radio" id="theme-radio-dark"></span>
+        </div>
+        <div class="settings-divider"></div>
+        <div class="settings-row">
+          <div class="settings-row-icon appear"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg></div>
+          <div class="settings-row-text"><span class="settings-row-label"><span data-i18n="fontSize">Font Size</span></span><span class="settings-row-sub" id="stg-font-size-label">Medium</span></div>
+          <div class="font-size-stepper">
+            <button onclick="changeFontSize(-1)">A-</button>
+            <button onclick="changeFontSize(1)">A+</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CHAT SETTINGS -->
+      <div class="settings-section-label">Chat Settings</div>
+      <div class="settings-card">
+        <div class="settings-row">
+          <div class="settings-row-icon chat"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+          <div class="settings-row-text"><span class="settings-row-label"><span data-i18n="enterSend">Send with Enter</span></span><span class="settings-row-sub"><span data-i18n="enterSendSub">Press Enter to send messages</span></span></div>
+          <label class="toggle-switch"><input type="checkbox" id="stg-enter-send" onchange="saveSetting('enter_send',this.checked)"><span class="toggle-track"></span></label>
+        </div>
+        <div class="settings-divider"></div>
+        <div class="settings-row">
+          <div class="settings-row-icon chat"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+          <div class="settings-row-text"><span class="settings-row-label"><span data-i18n="readReceipts">Read Receipts</span></span><span class="settings-row-sub">Show when messages are read</span></div>
+          <label class="toggle-switch"><input type="checkbox" id="stg-read-receipts" onchange="saveSetting('read_receipts',this.checked)"><span class="toggle-track"></span></label>
+        </div>
+        <div class="settings-divider"></div>
+        <div class="settings-row">
+          <div class="settings-row-icon chat"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+          <div class="settings-row-text"><span class="settings-row-label"><span data-i18n="typingIndicator">Typing Indicator</span></span><span class="settings-row-sub">Show when you are typing</span></div>
+          <label class="toggle-switch"><input type="checkbox" id="stg-typing" onchange="saveSetting('show_typing',this.checked)"><span class="toggle-track"></span></label>
+        </div>
+        <div class="settings-divider"></div>
+        <div class="settings-row">
+          <div class="settings-row-icon chat"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg></div>
+          <div class="settings-row-text"><span class="settings-row-label"><span data-i18n="autoDownload">Auto-Download Media</span></span><span class="settings-row-sub"><span data-i18n="autoDownloadSub">Automatically download images and files</span></span></div>
+          <label class="toggle-switch"><input type="checkbox" id="stg-auto-dl" onchange="saveSetting('auto_download',this.checked)"><span class="toggle-track"></span></label>
+        </div>
+      </div>
+
+      <!-- LANGUAGE -->
+      <div class="settings-section-label">Language</div>
+      <div class="settings-card">
+        <div class="settings-row" onclick="openLanguagePicker()" style="cursor:pointer">
+          <div class="settings-row-icon lang"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+          <div class="settings-row-text"><span class="settings-row-label"><span data-i18n="language">Language</span></span><span class="settings-row-sub" id="stg-lang-label">English</span></div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+      </div>
+
+      <!-- PRIVACY -->
+      <div class="settings-section-label">Privacy</div>
+      <div class="settings-card">
+        <div class="settings-row">
+          <div class="settings-row-icon priv"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+          <div class="settings-row-text"><span class="settings-row-label"><span data-i18n="lastSeen">Last Seen</span></span><span class="settings-row-sub">Show when you were last active</span></div>
+          <label class="toggle-switch"><input type="checkbox" id="stg-last-seen" onchange="saveSetting('show_last_seen',this.checked)"><span class="toggle-track"></span></label>
+        </div>
+        <div class="settings-divider"></div>
+        <div class="settings-row">
+          <div class="settings-row-icon priv"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+          <div class="settings-row-text"><span class="settings-row-label"><span data-i18n="profilePhoto">Profile Photo</span></span><span class="settings-row-sub"><span data-i18n="profilePhotoSub">Who can see your profile photo</span></span></div>
+          <div class="settings-select-wrap" onclick="cyclePrivacyOpt('profile_photo','stg-profile-photo')">
+            <span class="settings-select-val" id="stg-profile-photo">Everyone</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </div>
+        <div class="settings-divider"></div>
+        <div class="settings-row">
+          <div class="settings-row-icon priv"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+          <div class="settings-row-text"><span class="settings-row-label"><span data-i18n="whoCanMsg">Who Can Message Me</span></span><span class="settings-row-sub">Control who can start a chat</span></div>
+          <div class="settings-select-wrap" onclick="cyclePrivacyOpt('who_can_msg','stg-who-can-msg')">
+            <span class="settings-select-val" id="stg-who-can-msg">Everyone</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </div>
+        <div class="settings-divider"></div>
+        <div class="settings-row" onclick="openBlockedUsers()" style="cursor:pointer">
+          <div class="settings-row-icon priv"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg></div>
+          <div class="settings-row-text"><span class="settings-row-label"><span data-i18n="blockedUsers">Blocked Users</span></span><span class="settings-row-sub" id="blocked-count-label">Manage blocked accounts</span></div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+        <div class="settings-divider"></div>
+        <div class="settings-row" onclick="confirmDeleteAccount()" style="cursor:pointer">
+          <div class="settings-row-icon" style="background:rgba(239,68,68,.12);color:#ef4444"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></div>
+          <div class="settings-row-text"><span class="settings-row-label" style="color:var(--red)"><span data-i18n="deleteAccount">Delete My Account</span></span><span class="settings-row-sub"><span data-i18n="deleteAccountSub">Permanently remove all your data</span></span></div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" style="color:var(--red)"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+      </div>
+
+      <!-- SECURITY -->
+      <div class="settings-section-label">Security</div>
+      <div class="settings-card">
+
+        <!-- App Lock -->
+        <div class="settings-row">
+          <div class="settings-row-icon sec"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+          <div class="settings-row-text">
+            <span class="settings-row-label"><span data-i18n="appLock">App Lock</span></span>
+            <span class="settings-row-sub" id="applock-status-text">Protect app with a 4-digit PIN</span>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="stg-app-lock" onchange="toggleAppLock(this.checked)">
+            <span class="toggle-track"></span>
+          </label>
+        </div>
+
+        <!-- Change PIN (visible only when lock is on) -->
+        <div id="change-pin-row" style="display:none">
+          <div class="settings-divider"></div>
+          <div class="settings-row" onclick="openChangePIN()" style="cursor:pointer">
+            <div class="settings-row-icon sec"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+            <div class="settings-row-text"><span class="settings-row-label"><span data-i18n="changePIN">Change PIN</span></span><span class="settings-row-sub">Update your 4-digit lock PIN</span></div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </div>
+
+        <div class="settings-divider"></div>
+        <div class="settings-row" onclick="openChangePassword()" style="cursor:pointer">
+          <div class="settings-row-icon sec"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg></div>
+          <div class="settings-row-text"><span class="settings-row-label"><span data-i18n="changePassword">Change Password</span></span><span class="settings-row-sub"><span data-i18n="changePasswordSub">Update your account password</span></span></div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+        <div class="settings-divider"></div>
+        <div class="settings-row" onclick="openActiveSessions()" style="cursor:pointer">
+          <div class="settings-row-icon sec"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+          <div class="settings-row-text"><span class="settings-row-label"><span data-i18n="activeSessions">Active Sessions</span></span><span class="settings-row-sub">Manage logged-in devices</span></div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+      </div>
+
+      <!-- BACKGROUND -->
+      <div class="settings-section-label">Data & Storage</div>
+      <div class="settings-card">
+        <div class="settings-row">
+          <div class="settings-row-icon chat"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4-7 4z"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg></div>
+          <div class="settings-row-text"><span class="settings-row-label"><span data-i18n="bgData">Background Data</span></span><span class="settings-row-sub">Always on — messages &amp; calls received in background</span></div>
+          <span style="font-size:11px;font-weight:700;color:var(--green);letter-spacing:.4px">ALWAYS ON</span>
+        </div>
+        <div class="settings-divider"></div>
+        <div class="settings-row">
+          <div class="settings-row-icon chat"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+          <div class="settings-row-text"><span class="settings-row-label"><span data-i18n="bgSync">Background Sync</span></span><span class="settings-row-sub">Always on — syncs when app is closed or backgrounded</span></div>
+          <span style="font-size:11px;font-weight:700;color:var(--green);letter-spacing:.4px">ALWAYS ON</span>
+        </div>
+      </div>
+
+      <!-- LOGOUT from settings -->
+      <div class="settings-card" style="margin-bottom:8px">
+        <div class="settings-row" onclick="logout()" style="cursor:pointer">
+          <div class="settings-row-icon" style="background:rgba(239,68,68,.1);color:var(--red)"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></div>
+          <div class="settings-row-text"><span class="settings-row-label" style="color:var(--red)"><span data-i18n="logout">Logout</span></span><span class="settings-row-sub"><span data-i18n="logoutSub">Sign out of your account</span></span></div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="var(--red)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+      </div>
+
+      <div style="height:32px"></div>
+    </div>
+  </div>
+
+  <!-- MODAL: LANGUAGE PICKER -->
+  <div class="modal-backdrop" id="modal-language" onclick="if(event.target===this)closeModal('modal-language')">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <h3 class="modal-title">Choose Language</h3>
+      <div class="modal-body" id="language-list"></div>
+    </div>
+  </div>
+
+  <!-- MODAL: CHANGE PASSWORD -->
+  <div class="modal-backdrop" id="modal-change-password" onclick="if(event.target===this)closeModal('modal-change-password')">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <h3 class="modal-title"><span data-i18n="changePassword">Change Password</span></h3>
+      <div class="modal-form">
+        <div class="field"><label class="field-label"><span data-i18n="newPassword">New Password</span></label><input type="password" id="cp-new" class="inp" placeholder="Min 6 characters"></div>
+        <div class="field"><label class="field-label"><span data-i18n="confirmPassword">Confirm Password</span></label><input type="password" id="cp-confirm" class="inp" placeholder="Re-enter new password"></div>
+        <div class="modal-actions">
+          <button class="btn-secondary" onclick="closeModal('modal-change-password')"><span data-i18n="cancel">Cancel</span></button>
+          <button class="btn-primary" style="flex:1" id="cp-btn" onclick="submitChangePassword()"><span data-i18n="update">Update</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: ACTIVE SESSIONS -->
+  <div class="modal-backdrop" id="modal-sessions" onclick="if(event.target===this)closeModal('modal-sessions')">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <h3 class="modal-title">Active Sessions</h3>
+      <div class="modal-body" id="sessions-body"></div>
+    </div>
+  </div>
+
+
+  <!-- MODAL: SET / CHANGE PIN -->
+  <div class="modal-backdrop" id="modal-set-pin" onclick="event.stopPropagation()">
+    <div class="modal-sheet pin-modal-sheet" onclick="event.stopPropagation()">
+      <div class="modal-handle"></div>
+      <div class="pin-modal-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
+      <h3 class="modal-title" id="pin-modal-title" style="text-align:center">Set App Lock PIN</h3>
+      <p class="pin-modal-sub" id="pin-modal-sub">Enter a 4-digit PIN to lock your app</p>
+
+      <div class="pin-dots pin-dots-modal" id="pin-modal-dots">
+        <span class="pin-dot" id="pmd0"></span>
+        <span class="pin-dot" id="pmd1"></span>
+        <span class="pin-dot" id="pmd2"></span>
+        <span class="pin-dot" id="pmd3"></span>
+      </div>
+      <div class="pin-error" id="pin-modal-error"></div>
+
+      <div class="pin-pad">
+        <button class="pin-key" onclick="pinModalKey('1')">1</button>
+        <button class="pin-key" onclick="pinModalKey('2')">2</button>
+        <button class="pin-key" onclick="pinModalKey('3')">3</button>
+        <button class="pin-key" onclick="pinModalKey('4')">4</button>
+        <button class="pin-key" onclick="pinModalKey('5')">5</button>
+        <button class="pin-key" onclick="pinModalKey('6')">6</button>
+        <button class="pin-key" onclick="pinModalKey('7')">7</button>
+        <button class="pin-key" onclick="pinModalKey('8')">8</button>
+        <button class="pin-key" onclick="pinModalKey('9')">9</button>
+        <button class="pin-key pin-key-empty"></button>
+        <button class="pin-key" onclick="pinModalKey('0')">0</button>
+        <button class="pin-key pin-key-del" onclick="pinModalBackspace()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/><line x1="18" y1="9" x2="12" y2="15"/><line x1="12" y1="9" x2="18" y2="15"/></svg>
+        </button>
+      </div>
+
+      <button class="btn-secondary" style="margin:16px 0 0" onclick="cancelPinSetup()">Cancel</button>
+    </div>
+  </div>
+
+  <!-- MODAL: BLOCKED USERS -->
+  <div class="modal-backdrop" id="modal-blocked-users" onclick="if(event.target===this)closeModal('modal-blocked-users')">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <h3 class="modal-title">Blocked Users</h3>
+      <div class="modal-body"><div id="blocked-users-list"></div></div>
+    </div>
+  </div>
+
+  <div id="toast-container" aria-live="polite"></div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+  onerror="window._supabaseNotConfigured=true;console.error('[Insan] Supabase CDN failed to load.')"></script>
+<script src="supabase-config.js"></script>
+<script src="languages.js"></script>
+<script src="app.js"></script>
+<script>
+// Push initial state so back button can be intercepted by app.js popstate handler
+history.pushState(null, '', location.href);
+</script>
+
+
+
+
+  <!-- ═══════════ VOICE CALL OVERLAY ═══════════ -->
+  <div class="vc-overlay" id="vc-overlay" style="display:none">
+    <!-- Animated blob background -->
+    <div class="vc-bg-blob"></div>
+
+    <!-- Top bar: label + minimize -->
+    <div class="vc-overlay-topbar">
+      <span class="vc-overlay-label">Voice Call</span>
+      <button class="vc-minimize-btn" onclick="vcMinimize()" title="Minimize">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+    </div>
+
+    <!-- Status chip -->
+    <div class="vc-status-chip" id="vc-status-chip">
+      <span class="vc-status-dot" id="vc-status-dot"></span>
+      <span id="vc-status-text">Connecting…</span>
+    </div>
+
+    <!-- Remote user info -->
+    <div class="vc-user-section">
+      <div class="vc-avatar-ring" id="vc-avatar-ring">
+        <img id="vc-remote-img" src="" alt="" class="vc-avatar-img"
+          onerror="this.style.display='none';document.getElementById('vc-avatar-initials').style.display='flex'">
+        <div id="vc-avatar-initials" class="vc-avatar-initials" style="display:none">?</div>
+        <div class="vc-pulse-ring r1"></div>
+        <div class="vc-pulse-ring r2"></div>
+        <div class="vc-pulse-ring r3"></div>
+      </div>
+      <div class="vc-remote-name" id="vc-remote-name">User</div>
+      <div class="vc-call-timer" id="vc-call-timer">0:00</div>
+    </div>
+
+    <!-- Waveform -->
+    <canvas id="vc-waveform" class="vc-waveform-canvas" width="280" height="48"></canvas>
+
+    <!-- Controls row — each button wrapped with its label -->
+    <div class="vc-controls">
+      <div class="vc-ctrl-wrap">
+        <button class="vc-ctrl-btn" id="vc-mute-btn" onclick="vcToggleMute()" title="Mute/Unmute">
+          <svg id="vc-mute-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22">
+            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+            <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+            <line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/>
+          </svg>
+        </button>
+        <span class="vc-ctrl-label" id="vc-mute-label">Mute</span>
+      </div>
+
+      <div class="vc-ctrl-wrap">
+        <button class="vc-end-btn" onclick="endVoiceCall(true)" title="End call">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="26" height="26">
+            <path d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7 2 2 0 0 1 1.72 2v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07"/>
+            <path d="M14.5 9.5 9 4M3 3l18 18"/>
+            <path d="M6.33 6.33A13.47 13.47 0 0 0 3 13a2 2 0 0 0 2 2h.5"/>
+          </svg>
+        </button>
+        <span class="vc-ctrl-label" style="color:rgba(255,180,170,.85)">End</span>
+      </div>
+
+      <div class="vc-ctrl-wrap">
+        <button class="vc-ctrl-btn" id="vc-speaker-btn" onclick="vcToggleSpeaker()" title="Speaker">
+          <svg id="vc-speaker-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+          </svg>
+        </button>
+        <span class="vc-ctrl-label">Speaker</span>
+      </div>
+    </div>
+
+    <!-- My waveform -->
+    <div class="vc-my-row">
+      <canvas id="vc-local-waveform" width="120" height="28"></canvas>
+      <span class="vc-my-label">You</span>
+    </div>
+  </div>
+
+  <!-- ═══════════ CALL MINI STRIP (minimized state) ═══════════ -->
+  <!-- ═══════════ INCOMING CALL MODAL ═══════════ -->
+  <div class="vc-incoming" id="vc-incoming" style="display:none">
+    <div class="vc-incoming-card">
+      <div class="vc-incoming-avatar" id="vc-inc-avatar">?</div>
+      <div class="vc-incoming-name" id="vc-inc-name">Someone</div>
+      <div class="vc-incoming-label">Incoming voice call…</div>
+      <div class="vc-incoming-btns">
+        <button class="vc-inc-btn decline" onclick="declineIncomingCall()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="22" height="22">
+            <path d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7 2 2 0 0 1 1.72 2v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07"/>
+            <path d="M14.5 9.5 9 4M3 3l18 18"/>
+          </svg>
+          <span>Decline</span>
+        </button>
+        <button class="vc-inc-btn accept" onclick="acceptIncomingCall()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="22" height="22">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+          </svg>
+          <span>Accept</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- MODAL: ABOUT -->
+  <div class="modal-backdrop" id="modal-about" onclick="if(event.target===this)closeModal('modal-about')">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-form" style="padding-top:0;align-items:center;text-align:center">
+        <div class="about-logo-wrap">
+          <img src="icons/insan.png" alt="Insan" class="about-logo" onerror="this.style.display='none'">
+        </div>
+        <h2 class="about-app-name">Insan Chat</h2>
+        <p class="about-version" id="about-version-text">Version 1.1.0</p>
+        <div class="about-update-banner" id="about-update-banner" style="display:none">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+          <span id="about-update-text">New version available!</span>
+          <button class="about-update-now-btn" onclick="applyUpdate()">Update Now</button>
+        </div>
+        <p class="about-up-to-date" id="about-up-to-date" style="display:none">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          You're on the latest version
+        </p>
+        <div class="about-divider"></div>
+        <div class="about-info-grid">
+          <div class="about-info-item">
+            <span class="about-info-label">Chat</span>
+            <span class="about-info-value">Direct Message</span>
+          </div>
+          <div class="about-info-item">
+            <span class="about-info-label">Calls</span>
+            <span class="about-info-value">P2P Voice Call</span>
+          </div>
+          <div class="about-info-item">
+            <span class="about-info-label">Voice Chat</span>
+            <span class="about-info-value">Join Voice Chat</span>
+          </div>
+          <div class="about-info-item">
+            <span class="about-info-label">Video Calls</span>
+            <span class="about-info-value">Coming Soon...</span>
+          </div>
+        </div>
+        <p class="about-tagline">Connect, Chat & Call — Securely</p>
+        <div class="modal-actions" style="margin-top:8px">
+          <button class="btn-secondary" style="flex:1" onclick="closeModal('modal-about')"><span data-i18n="close">Close</span></button>
+          <button class="btn-primary" style="flex:1" id="about-check-btn" onclick="checkForUpdateManual()">Check for Updates</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: CALLS HISTORY -->
+  <div class="modal-backdrop" id="modal-calls-history" onclick="if(event.target===this)closeModal('modal-calls-history')">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-header-row">
+        <div class="modal-header-icon calls-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        </div>
+        <h3 class="modal-title" style="margin-bottom:0">Calls</h3>
+      </div>
+      <div class="calls-filter-row">
+        <button class="calls-filter-btn active" id="calls-filter-all" onclick="filterCalls('all')">All</button>
+        <button class="calls-filter-btn" id="calls-filter-incoming" onclick="filterCalls('incoming')">Incoming</button>
+        <button class="calls-filter-btn" id="calls-filter-outgoing" onclick="filterCalls('outgoing')">Outgoing</button>
+        <button class="calls-filter-btn" id="calls-filter-missed" onclick="filterCalls('missed')">Missed</button>
+      </div>
+      <div class="modal-body calls-history-body" id="calls-history-list">
+        <div class="calls-empty-state">
+          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:.3;margin-bottom:10px"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          <p style="color:var(--text-sec);font-size:14px">No calls yet</p>
+        </div>
+      </div>
+      <div class="modal-actions" style="padding:12px 20px 20px">
+        <button class="btn-secondary" style="flex:1" onclick="closeModal('modal-calls-history')"><span data-i18n="close">Close</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: INVITE -->
+  <div class="modal-backdrop" id="modal-invite" onclick="if(event.target===this)closeModal('modal-invite')">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-header-row">
+        <div class="modal-header-icon invite-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+        </div>
+        <h3 class="modal-title" style="margin-bottom:0">Invite Friends</h3>
+      </div>
+      <div class="modal-form" style="padding-top:8px">
+        <p class="modal-desc" style="margin-bottom:16px">Share this link to invite someone to Insan Chat</p>
+        <div class="invite-link-box">
+          <input type="text" id="invite-link-input" class="inp" readonly style="flex:1;background:var(--surface2);cursor:default" value="">
+          <button class="btn-primary invite-copy-btn" id="invite-copy-btn" onclick="copyInviteLink()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copy
+          </button>
+        </div>
+        <div class="invite-share-row">
+          <button class="invite-share-btn" onclick="shareInvite('whatsapp')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+            WhatsApp
+          </button>
+          <button class="invite-share-btn" onclick="shareInvite('telegram')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+            Telegram
+          </button>
+          <button class="invite-share-btn" onclick="shareInvite('native')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+            Share
+          </button>
+        </div>
+        <div class="modal-actions" style="margin-top:8px">
+          <button class="btn-secondary" style="flex:1" onclick="closeModal('modal-invite')"><span data-i18n="close">Close</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ GROUP / CHANNEL VOICE CHAT PANEL ═══════════ -->
+  <div class="gvc-panel" id="gvc-panel">
+    <div class="gvc-panel-topbar">
+      <button class="gvc-panel-back" onclick="gvcHidePanel()" aria-label="Back to chat">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <div>
+        <div class="gvc-panel-title" id="gvc-panel-title">Voice Chat</div>
+        <div class="gvc-panel-subtitle" id="gvc-panel-subtitle">0 participants</div>
+      </div>
+    </div>
+    <div class="gvc-participants-grid" id="gvc-participants-grid">
+      <div class="gvc-panel-empty" id="gvc-panel-empty">
+        <div class="gvc-panel-empty-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <p>No one has joined yet.<br>Be the first to join!</p>
+      </div>
+    </div>
+    <div class="gvc-panel-controls">
+      <div class="gvc-ctrl">
+        <button class="gvc-ctrl-btn" id="gvc-mute-btn" onclick="gvcToggleMute()" title="Mute/Unmute">
+          <svg xmlns="http://www.w3.org/2000/svg" id="gvc-mute-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+        </button>
+        <span class="gvc-ctrl-label" id="gvc-mute-label">Mute</span>
+      </div>
+      <div class="gvc-ctrl">
+        <button class="gvc-end-call-btn" id="gvc-leave-panel-btn" onclick="gvcLeave()" title="Leave voice chat">
+          <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7 2 2 0 0 1 1.72 2v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07"/><path d="M14.5 9.5 9 4M3 3l18 18"/><path d="M6.33 6.33A13.47 13.47 0 0 0 3 13a2 2 0 0 0 2 2h.5"/></svg>
+        </button>
+        <span class="gvc-ctrl-label">Leave</span>
+      </div>
+      <div class="gvc-ctrl">
+        <button class="gvc-ctrl-btn" id="gvc-speaker-btn" onclick="gvcToggleSpeaker()" title="Toggle speaker/earpiece">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+        </button>
+        <span class="gvc-ctrl-label" id="gvc-speaker-label">Speaker</span>
+      </div>
+      <div class="gvc-ctrl" id="gvc-end-ctrl" style="display:none">
+        <button class="gvc-ctrl-btn danger" onclick="gvcEnd()" title="End voice chat for everyone">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+        </button>
+        <span class="gvc-ctrl-label">End All</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: VIEW PROFILE (separate from members modal) -->
+  <div class="modal-backdrop" id="modal-view-profile" onclick="if(event.target===this)closeModal('modal-view-profile')">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <h3 class="modal-title" id="profile-modal-title">Profile</h3>
+      <div class="modal-body" id="profile-modal-body"></div>
+    </div>
+  </div>
+  <!-- ═══════════ FORWARD MESSAGE MODAL ═══════════ -->
+  <div class="modal-backdrop" id="modal-forward" onclick="if(event.target===this)closeModal('modal-forward')">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-header-row">
+        <h3 class="modal-title" style="margin-bottom:0">Forward to…</h3>
+        <button class="modal-close-btn" onclick="closeModal('modal-forward')">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body" id="forward-chat-list" style="max-height:60vh;overflow-y:auto"></div>
+    </div>
+  </div>
+
+  <!-- GVC GLOBAL MINI STRIP — visible from any screen when group/channel voice is active -->
+  <div id="gvc-global-mini-strip" class="gvc-global-mini-strip" style="display:none" onclick="gvcShowPanel()">
+    <div class="gvc-gms-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+    </div>
+    <div class="gvc-gms-info">
+      <span class="gvc-gms-name" id="gvc-mini-conv-name">Voice Chat</span>
+      <span class="gvc-gms-count" id="gvc-mini-part-count">0 participants</span>
+    </div>
+    <span class="gvc-gms-live">LIVE</span>
+    <div class="gvc-gms-btns">
+      <button class="gvc-gms-mute-btn" id="gvc-gms-mute-btn" onclick="event.stopPropagation();gvcToggleMute()" title="Mute">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" id="gvc-gms-mute-icon"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+      </button>
+      <button class="gvc-gms-leave-btn" onclick="event.stopPropagation();gvcLeave()" title="Leave">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><path d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7 2 2 0 0 1 1.72 2v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07"/><path d="M14.5 9.5 9 4M3 3l18 18"/><path d="M6.33 6.33A13.47 13.47 0 0 0 3 13a2 2 0 0 0 2 2h.5"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- FLOW SCREEN -->
+  <div class="screen" id="screen-flow">
+    <header class="topbar">
+      <button class="icon-btn" onclick="closeFlow()" aria-label="Back">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <span class="topbar-title" style="background:linear-gradient(135deg,#2ECC71,#00B894);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Flow</span>
+      <button class="icon-btn flow-compose-topbar-btn" onclick="openFlowCompose()" aria-label="Create post" title="Create post">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </button>
+    </header>
+    <!-- Tab bar -->
+    <div class="flow-tabs">
+      <button class="flow-tab active" id="flow-tab-feed" onclick="flowSwitchTab('feed')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Feed
+      </button>
+      <button class="flow-tab" id="flow-tab-my" onclick="flowSwitchTab('my')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        My Posts
+      </button>
+    </div>
+    <div class="flow-posts-wrap">
+      <div id="flow-posts-list"></div>
+    </div>
+    <!-- FAB compose button -->
+    <button class="flow-fab" onclick="openFlowCompose()" aria-label="Create post">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </button>
+  </div>
+
+  <!-- MODAL: FLOW COMPOSE -->
+  <div class="modal-backdrop" id="modal-flow-compose" onclick="if(event.target===this)closeModal('modal-flow-compose')">
+    <div class="modal-sheet flow-compose-sheet">
+      <div class="modal-handle"></div>
+      <div class="flow-compose-header">
+        <img id="flow-compose-avatar" src="" class="flow-compose-user-avatar" alt="" onerror="this.src=avatarSrc(null)">
+        <div>
+          <div class="flow-compose-user-name" id="flow-compose-user-name">You</div>
+          <div class="flow-compose-visibility">🌍 Public</div>
+        </div>
+        <button class="flow-compose-close-btn" onclick="closeModal('modal-flow-compose')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <textarea id="flow-compose-text" class="flow-compose-textarea" data-i18n-ph="flowPlaceholder" placeholder="What's on your mind?"></textarea>
+      <div id="flow-compose-preview" style="display:none;padding:0 0 8px"></div>
+      <input type="file" id="flow-compose-file" accept="image/*,video/*" style="display:none" onchange="_flowHandleMediaFile(this)">
+      <div class="flow-compose-toolbar">
+        <button class="flow-toolbar-btn" onclick="_flowComposeAddMedia()" title="Add photo/video">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <span>Photo / Video</span>
+        </button>
+      </div>
+      <div class="modal-actions" style="padding-top:8px">
+        <button class="btn-secondary" onclick="closeModal('modal-flow-compose')"><span data-i18n="cancel">Cancel</span></button>
+        <button class="btn-primary" style="flex:1" id="flow-compose-submit-btn" onclick="_flowSubmitPost()">Share</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: FLOW COMMENTS -->
+  <div class="modal-backdrop" id="modal-flow-comments" onclick="if(event.target===this)closeModal('modal-flow-comments')">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <h3 class="modal-title">Comments</h3>
+      <div class="modal-body flow-comments-body" id="flow-comments-body" style="min-height:120px;max-height:50vh"></div>
+      <div class="flow-comment-input-row">
+        <img id="flow-comments-avatar" src="" class="flow-comment-my-avatar" alt="" onerror="this.src=avatarSrc(null)">
+        <input type="text" id="flow-comment-input" class="inp flow-comment-inp" data-i18n-ph="writeComment" placeholder="Write a comment…"
+          onkeydown="if(event.key==='Enter')_flowSubmitComment()">
+        <button id="flow-comment-send-btn" class="flow-comment-send-btn" onclick="_flowSubmitComment()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
